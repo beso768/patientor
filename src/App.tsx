@@ -8,6 +8,8 @@ import { useStateValue } from "./state";
 import { Patient } from "./types";
 
 import PatientListPage from "./PatientListPage";
+import PatientPage from "./components/PatientPage";
+import { setPatientList } from "./state/reducer";
 
 const App = () => {
   const [, dispatch] = useStateValue();
@@ -19,7 +21,7 @@ const App = () => {
         const { data: patientListFromApi } = await axios.get<Patient[]>(
           `${apiBaseUrl}/patients`
         );
-        dispatch({ type: "SET_PATIENT_LIST", payload: patientListFromApi });
+        dispatch(setPatientList(patientListFromApi));
       } catch (e) {
         console.error(e);
       }
@@ -37,9 +39,13 @@ const App = () => {
           </Button>
           <Divider hidden />
           <Switch>
+            <Route path="/:id">
+              <PatientPage />
+            </Route>
             <Route path="/">
               <PatientListPage />
             </Route>
+            <Route path="/notFound">404</Route>
           </Switch>
         </Container>
       </Router>
